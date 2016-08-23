@@ -12,9 +12,14 @@ public class Launcher {
   }
 
   private void launch() {
-    Observable.create(s -> s.onNext("Hello, world"))
+    Observable.create(
+      subscriber -> {
+        subscriber.onNext("Hello,");
+        subscriber.onNext("World");
+      }
+    )
       .subscribe(System.out::println);
   }
 }
 
-// create2
+// createwcomplete
