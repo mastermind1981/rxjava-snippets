@@ -22,8 +22,9 @@ public class Launcher {
 
   private void launch() throws InterruptedException {
     Observable.just("Hello", "World")
+      .buffer(2)
       .subscribe(System.out::println);
   }
 }
 
-// 05_buffer
+// 06_null_test
