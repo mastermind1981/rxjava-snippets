@@ -21,25 +21,9 @@ public class Launcher {
   }
 
   private void launch() throws InterruptedException {
-    SomeFeed feed = new SomeFeed(3);
-    Observable<PriceTick> observable = Observable.create(s ->
-      feed.register(new SomeListener() {
-        @Override
-        public void priceTick(PriceTick event) {
-          s.onNext(event);
-        }
-
-        @Override
-        public void error(Throwable throwable) {
-          s.onError(throwable);
-        }
-
-      })
-    );
-
-    Observable<PriceTick> take = observable.take(20);
-    take.subscribe(System.out::println);
+    Observable.just("Hello, World")
+      .subscribe(System.out::println);
   }
 }
 
-// 03_attach_one
+// 04_attach_two
