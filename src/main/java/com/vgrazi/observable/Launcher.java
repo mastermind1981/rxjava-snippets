@@ -2,6 +2,8 @@ package com.vgrazi.observable;
 
 import rx.Observable;
 
+import java.io.IOException;
+
 /**
  * Created by vgrazi on 8/23/16.
  */
@@ -12,15 +14,18 @@ public class Launcher {
   }
 
   private void launch() {
-    Observable.create(
+    Observable<Object> observable = Observable.create(
       subscriber -> {
         subscriber.onNext("Hello,");
         subscriber.onNext("World");
+        subscriber.onError(new IOException("test exception"));
+        subscriber.onNext("Ignored after error");
         subscriber.onCompleted();
       }
-    )
-      .subscribe(System.out::println, System.out::println, () -> System.out.println("Complete"));
+    );
+
+    observable.subscribe(System.out::println, System.out::println, () -> System.out.println("Complete"));
   }
 }
 
-// createwerror
+// 02_attachfeed
