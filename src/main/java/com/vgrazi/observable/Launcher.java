@@ -16,10 +16,11 @@ public class Launcher {
       subscriber -> {
         subscriber.onNext("Hello,");
         subscriber.onNext("World");
+        subscriber.onCompleted();
       }
     )
-      .subscribe(System.out::println);
+      .subscribe(System.out::println, System.out::println, () -> System.out.println("Complete"));
   }
 }
 
-// createwcomplete
+// createwerror
