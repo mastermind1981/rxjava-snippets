@@ -12,8 +12,9 @@ public class Launcher {
   }
 
   private void launch() {
-
+    Observable.create(s -> s.onNext("Hello, world"))
+      .subscribe(System.out::println);
   }
 }
 
-// start
+// create2
