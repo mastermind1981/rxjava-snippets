@@ -28,6 +28,8 @@ public class SomeFeed {
 
   private final Random RANDOM = new Random(0);
   private static final Random RANDOM_PRICE = new Random(0);
+  private final AtomicInteger sequence = new AtomicInteger(1);
+
 
   public SomeFeed() {
     this(1);
@@ -63,9 +65,8 @@ public class SomeFeed {
 
           double finalPrice = price;
           listeners.forEach(subscriber -> {
-            String message = String.format("%s %s %s", format.format(new Date()), instrument, finalPrice);
-//            System.out.println("Notifying " + message);
-            subscriber.priceTick(message);
+            PriceTick priceTick = new PriceTick(sequence.getAndIncrement(), new Date(), instrument, finalPrice);
+            subscriber.priceTick(priceTick);
           });
           synchronized (MUTEX) {
             MUTEX.wait(RANDOM.nextInt(500) + 500);
@@ -85,7 +86,7 @@ public class SomeFeed {
     }
   }
 
-  void register(SomeListener listener) {
+  public void register(SomeListener listener) {
     listeners.add(listener);
   }
 

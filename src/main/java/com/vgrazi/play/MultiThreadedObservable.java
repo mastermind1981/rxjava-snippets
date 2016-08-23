@@ -23,13 +23,14 @@ public class MultiThreadedObservable {
                 new SomeListener() {
 
                     @Override
-                    public void priceTick(String event) {
+                    public void priceTick(PriceTick event) {
                         if (count[0]++ == 5) {
                             System.out.println("Completing " + subscriber);
                             subscriber.onCompleted();
                             System.out.println("Completed " + subscriber);
                         } else {
-                            subscriber.onNext(event);
+// todo: implement::::
+//                            subscriber.onNext(event);
                         }
                     }
 

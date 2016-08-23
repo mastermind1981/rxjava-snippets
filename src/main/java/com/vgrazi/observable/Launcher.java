@@ -1,31 +1,45 @@
 package com.vgrazi.observable;
 
+import com.vgrazi.play.PriceTick;
+import com.vgrazi.play.SomeFeed;
+import com.vgrazi.play.SomeListener;
 import rx.Observable;
+import rx.Subscription;
+import rx.functions.Func1;
 
-import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by vgrazi on 8/23/16.
  */
 public class Launcher {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     new Launcher().launch();
   }
 
-  private void launch() {
-    Observable<Object> observable = Observable.create(
-      subscriber -> {
-        subscriber.onNext("Hello,");
-        subscriber.onNext("World");
-        subscriber.onError(new IOException("test exception"));
-        subscriber.onNext("Ignored after error");
-        subscriber.onCompleted();
-      }
+  private void launch() throws InterruptedException {
+    SomeFeed feed = new SomeFeed(3);
+    Observable<PriceTick> observable = Observable.create(s ->
+      feed.register(new SomeListener() {
+        @Override
+        public void priceTick(PriceTick event) {
+          s.onNext(event);
+        }
+
+        @Override
+        public void error(Throwable throwable) {
+          s.onError(throwable);
+        }
+
+      })
     );
 
-    observable.subscribe(System.out::println, System.out::println, () -> System.out.println("Complete"));
+    Observable<PriceTick> take = observable.take(20);
+    take.subscribe(System.out::println);
   }
 }
 
-// 02_attachfeed
+// 03_attach_one

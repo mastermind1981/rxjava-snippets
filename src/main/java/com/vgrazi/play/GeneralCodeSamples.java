@@ -4,11 +4,8 @@ import org.junit.Test;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.Subscriber;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.functions.FuncN;
 import rx.observables.ConnectableObservable;
 import rx.observables.MathObservable;
 import rx.subjects.AsyncSubject;
@@ -112,7 +109,7 @@ public class GeneralCodeSamples {
     Observable.create(s ->
       feed.register(new SomeListener() {
         @Override
-        public void priceTick(String event) {
+        public void priceTick(PriceTick event) {
           s.onNext(event);
         }
 
@@ -132,7 +129,7 @@ public class GeneralCodeSamples {
     Observable.create(s ->
       feed.register(new SomeListener() {
         @Override
-        public void priceTick(String event) {
+        public void priceTick(PriceTick event) {
           s.onNext(event);
         }
 

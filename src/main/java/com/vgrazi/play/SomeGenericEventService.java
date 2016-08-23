@@ -46,7 +46,8 @@ public class SomeGenericEventService {
                     if (barriered) {
                         barrier.await();
                     }
-                    listeners.forEach(subscriber -> subscriber.priceTick(String.format("%s %s", Thread.currentThread().getName(), format.format(new Date()))));
+// todo: implement:::
+//                    listeners.forEach(subscriber -> subscriber.priceTick(String.format("%s %s", Thread.currentThread().getName(), format.format(new Date()))));
                     synchronized (MUTEX) {
                         MUTEX.wait(RANDOM.nextInt(500) + 500);
                     }
