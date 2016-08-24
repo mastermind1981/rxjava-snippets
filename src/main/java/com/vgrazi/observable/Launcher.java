@@ -5,11 +5,6 @@ import com.vgrazi.play.SomeFeed;
 import com.vgrazi.play.SomeListener;
 import rx.Observable;
 import rx.Subscription;
-import rx.functions.Func1;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by vgrazi on 8/23/16.
