@@ -26,14 +26,17 @@ public class Launcher {
       feed.register(new SomeListener() {
         @Override
         public void priceTick(PriceTick event) {
-          s.onNext(event);
+          if (!s.isUnsubscribed()) {
+            s.onNext(event);
+          }
         }
 
         @Override
         public void error(Throwable throwable) {
-          s.onError(throwable);
+          if (!s.isUnsubscribed()) {
+            s.onError(throwable);
+          }
         }
-
       })
     );
 
