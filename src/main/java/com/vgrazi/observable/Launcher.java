@@ -16,30 +16,35 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class Launcher {
 
-  public static void main(String[] args) throws InterruptedException {
-    new Launcher().launch();
-  }
+    public static void main(String[] args) throws InterruptedException {
+        new Launcher().launch();
+    }
 
-  private void launch() throws InterruptedException {
-    SomeFeed feed = new SomeFeed(3);
-    Observable<PriceTick> observable = Observable.create(s ->
-      feed.register(new SomeListener() {
-        @Override
-        public void priceTick(PriceTick event) {
-          s.onNext(event);
-        }
+    private void launch() throws InterruptedException {
+        SomeFeed feed = new SomeFeed(3);
+        Observable<PriceTick> observable = Observable.create(s ->
+                feed.register(new SomeListener() {
+                    @Override
+                    public void priceTick(PriceTick event) {
+                        if (!s.isUnsubscribed()) {
+                            s.onNext(event);
+                        }
+                    }
 
-        @Override
-        public void error(Throwable throwable) {
-          s.onError(throwable);
-        }
+                    @Override
+                    public void error(Throwable throwable) {
+                        if (!s.isUnsubscribed()) {
+                            s.onError(throwable);
+                        }
+                    }
 
-      })
-    );
+                })
+        );
+        Subscription subscription = observable.subscribe(System.out::println);
 
-    Observable<PriceTick> take = observable.take(20);
-    take.subscribe(System.out::println);
-  }
+        Thread.sleep(5000);
+        subscription.unsubscribe();
+    }
 }
 
 // 03_attach_one
