@@ -4,6 +4,7 @@ import org.junit.Test;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
+import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.observables.ConnectableObservable;
@@ -88,7 +89,7 @@ public class GeneralCodeSamples {
 //      .doOnError(System.out::println);
 
     ConcurrentLinkedDeque<Observable<?>> sources = new ConcurrentLinkedDeque<>();
-    Observable<String>  observable1 = Observable.combineLatestDelayError(sources, args -> Arrays.asList(args).toString());
+    Observable<String> observable1 = Observable.combineLatestDelayError(sources, args -> Arrays.asList(args).toString());
     observable1.subscribe(System.out::println,
       System.out::println, () -> System.out.println("Complete"));
     System.out.println(sources);
@@ -104,13 +105,23 @@ public class GeneralCodeSamples {
   }
 
   @Test
+  public void testFeedWithCallable() {
+    Observable.fromCallable(() -> "hello").subscribe(System.out::println);
+
+  }
+
+
+
+  @Test
   public void testAttachFeed() {
     SomeFeed feed = new SomeFeed(3);
-    Observable.create(s ->
+    Subscription subscription = Observable.create(s ->
       feed.register(new SomeListener() {
         @Override
         public void priceTick(PriceTick event) {
-          s.onNext(event);
+          if (!s.isUnsubscribed()) {
+            s.onNext(event);
+          }
         }
 
         @Override
@@ -120,7 +131,9 @@ public class GeneralCodeSamples {
       })
     ).subscribe(System.out::println);
 
-    sleep(500_000);
+    sleep(5_000);
+    subscription.unsubscribe();
+    sleep(5_000);
   }
 
   @Test
